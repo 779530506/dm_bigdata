@@ -15,6 +15,10 @@ def index():
 
     return render_template('home/index.html', segment='index')
 
+@blueprint.route('/imports')
+def imports():
+    return render_template('home/import.html', segment='imports')
+
 
 @blueprint.route('/<template>')
 @login_required
