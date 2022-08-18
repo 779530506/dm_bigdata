@@ -24,7 +24,8 @@ def upload_file():
     if request.method == 'POST':
         f = request.files['file']
         #return f'uploaded {f.filename}'
-        rep ="/home/abdoulayesarr/Documents/Digital_management/tmp"
+        #rep ="/home/abdoulayesarr/Documents/Digital_management/tmp"
+        rep ="/home/data/Documents/dm/tmp"
         f.save(os.path.join(rep,f.filename))
         flash('file loaded successful','success')
         return render_template('home/import.html')
