@@ -4,10 +4,10 @@ Copyright (c) 2019 - present AppSeed.us
 """
 
 from apps.home import blueprint
-from flask import render_template, request
+from flask import render_template, request,flash,redirect
 from flask_login import login_required
 from jinja2 import TemplateNotFound
-
+import os
 
 @blueprint.route('/index')
 @login_required
@@ -18,6 +18,16 @@ def index():
 @blueprint.route('/imports')
 def imports():
     return render_template('home/import.html', segment='imports')
+
+@blueprint.route('/upload', methods=['GET', 'POST'])
+def upload_file():
+    if request.method == 'POST':
+        f = request.files['file']
+        #return f'uploaded {f.filename}'
+        rep ="/home/abdoulayesarr/Documents/Digital_management/tmp"
+        f.save(os.path.join(rep,f.filename))
+        flash('file loaded successful','success')
+        return render_template('home/import.html')
 
 
 @blueprint.route('/<template>')

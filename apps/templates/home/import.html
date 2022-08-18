@@ -40,13 +40,23 @@
                                             <h5>Importation de données</h5>
                                         </div>
                                         <div class="card-body">
-                                          
+                                          <div class="success">
+                                            {% with messages = get_flashed_messages() %}
+                                                    {% if messages %}
+                                                        {% for message in messages %}
+                                                            {{ message }}
+                                                        {% endfor %}
+                                                    {% endif %}
+                                                    {% endwith %}
+                                          </div>
                                             <div class="row">
                                                 <div class="col-md-12">
-                                                    <form>
+                                                    
+
+                                                    <form method="POST"  action="{{ url_for('home_blueprint.upload_file') }}" enctype="multipart/form-data">
                                                         <div class="form-group">
                                                             <label for="formFileLg" class="form-label">Upload CSV</label>
-                                                             <input class="form-control form-control-lg" id="formFileLg" type="file">
+                                                             <input class="form-control form-control-lg" name="file" id="formFileLg" type="file">
                                                         </div>
                                                         <div class="form-group">
                                                             <label for="exampleFormControlSelect1">Index</label>
