@@ -8,12 +8,16 @@ from flask import render_template, request,flash,redirect
 from flask_login import login_required
 from jinja2 import TemplateNotFound
 import os
+from apps.home.utils import getData
+
 
 @blueprint.route('/index')
 @login_required
 def index():
-
-    return render_template('home/index.html', segment='index')
+    data = getData()
+    personnes = data["hits"]["hits"]
+    nbrPersonne = len(personnes)
+    return render_template('home/index.html', segment='index',personnes=personnes,nbr=nbrPersonne)
 
 @blueprint.route('/imports')
 def imports():
@@ -23,9 +27,10 @@ def imports():
 def upload_file():
     if request.method == 'POST':
         f = request.files['file']
+        
         #return f'uploaded {f.filename}'
-        #rep ="/home/abdoulayesarr/Documents/Digital_management/tmp"
-        rep ="/home/data/Documents/dm/tmp"
+        rep ="/home/abdoulayesarr/Documents/Digital_management/tmp"
+        #rep ="/home/data/Documents/dm/tmp"
         f.save(os.path.join(rep,f.filename))
         flash('file loaded successful','success')
         return render_template('home/import.html')
