@@ -3,85 +3,109 @@
 {% block title %} Dashboard {% endblock %} 
 
 <!-- Specific CSS goes HERE -->
-{% block stylesheets %}{% endblock stylesheets %}
+{% block stylesheets %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/css/bootstrap-select.css">
+    <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"> -->
+    <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> -->
+
+    {% endblock stylesheets %}
 
 {% block content %}
 
      <!-- [ Main Content ] start -->
-     <section class="pcoded-main-container">
-        <div class="pcoded-wrapper">
+<section class="pcoded-main-container">
+<div class="pcoded-wrapper">
 
-            <div class="pcoded-content">
-                <div class="pcoded-inner-content">
-                    <!-- [ breadcrumb ] start -->
-                    <div class="page-header">
-                        <div class="page-block">
-                            <div class="row align-items-center">
-                                <div class="col-md-12">
-                                    <div class="page-header-title">
-                                        <!-- <h5 class="m-b-10">Bootstrap Basic Tables</h5> -->
-                                    </div>
-                                    <ul class="breadcrumb">
-                                        <li class="breadcrumb-item"><a href="/"><i class="feather icon-home"></i></a></li>
-                                        <li class="breadcrumb-item"><a href="#!">Tables</a></li>
-                                        <li class="breadcrumb-item"><a href="javascript:">Basic Tables</a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
+<div class="pcoded-content">
+<div class="pcoded-inner-content">
+    <!-- [ breadcrumb ] start -->
+    <div class="page-header">
+        <div class="page-block">
+            <div class="row align-items-center">
+                <div class="col-md-12">
+                    <div class="page-header-title">
+                        <!-- <h5 class="m-b-10">Bootstrap Basic Tables</h5> -->
                     </div>
-                    <!-- [ breadcrumb ] end -->
-                    <div class="main-body">
-                        <div class="page-wrapper">
-                            <!-- [ Main Content ] start -->
+                    <ul class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="/"><i class="feather icon-home"></i></a></li>
+                        <li class="breadcrumb-item"><a href="#!">Tables</a></li>
+                        <li class="breadcrumb-item"><a href="javascript:">Basic Tables</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- [ breadcrumb ] end -->
+    <div class="main-body">
+        <div class="page-wrapper">
+            <!-- [ Main Content ] start -->
+            <div class="row">
+        
+                <!-- [ stiped-table ] start -->
+                <div class="col-xl-12">
+                    <div class="card">
+                        <div class="card-header">
+                                <!-- <span class="d-block m-t-5">use class <code>table-striped</code> inside table element</span> -->
                             <div class="row">
-                        
-                                <!-- [ stiped-table ] start -->
-                                <div class="col-xl-12">
-                                    <div class="card">
-                                        <div class="card-header">
-                                            <h5>Striped Table</h5>
-                                            <span class="d-block m-t-5">use class <code>table-striped</code> inside table element</span>
-                                        </div>
-                                        <div class="card-block table-border-style">
-                                            <div class="table-responsive">
-                                                <table class="table bg-red table-striped ">
-                                                    <thead class="table-dark"> 
-                                                        <tr> {% for key in personnes[0]['_source'] %}
-                                                            <th>{{key}} </th>
-                                                            {%endfor %}
-   
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        {% for i in range(nbr) %}
-                                                        <tr> 
-                                                            {% for key in personnes[i]['_source']%}
-                                                            <td>{{personnes[i]['_source'][key]}}</td>
-                                                            {% endfor%}             
-                                                        </tr>
-                                                        {% endfor%}
-                                                    
-                                                     
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                        </div>
-                                    </div>
+                            <form class="form-inline  ">
+                                <div class="form-group md-6 mb-2">
+                                    <select name="" id="" class="form-control  selectpicker " 
+                                        data-live-search="true" multiple placeholder="select colonne" >
+                                            {% for key in personnes[0]['_source'] %}
+                                                <option value="colone 1">{{key}} </option>
+                                                {%endfor %}
+                                        </select>
                                 </div>
-                                <!-- [ stiped-table ] end -->
+                                <div class="form-group mx-sm-3 md-2 mb-2">
+                                    <label for="inputPassword2" class="sr-only">Password</label>
+                                    <input type="text" class="form-control "   placeholder="">
+                                </div>
+                                <button type="submit" class="btn btn-outline-dark col-md-1">Search </button>
+                            </form>
+                        </div>
+                        </div>
+                        <div class="card-block table-border-style">
+                            <div class="table-responsive">
+                                <table class="table bg-red table-striped ">
+                                    <thead class="table-dark"> 
+                                        <tr> {% for key in personnes[0]['_source'] %}
+                                            <th>{{key}} </th>
+                                            {%endfor %}
+
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for i in range(nbr) %}
+                                        <tr> 
+                                            {% for key in personnes[i]['_source']%}
+                                            <td>{{personnes[i]['_source'][key]}}</td>
+                                            {% endfor%}             
+                                        </tr>
+                                        {% endfor%}
+                                    
+                                        
+                                    </tbody>
+                                </table>
                             </div>
-                            <!-- [ Main Content ] end -->
                         </div>
                     </div>
                 </div>
+                <!-- [ stiped-table ] end -->
             </div>
-            
+            <!-- [ Main Content ] end -->
         </div>
-    </section>
+    </div>
+</div>
+</div>
+
+</div>
+</section>
     <!-- [ Main Content ] end -->        
 
 {% endblock content %}
 
 <!-- Specific Page JS goes HERE  -->
-{% block javascripts %}{% endblock javascripts %}
+{% block javascripts %}
+<!-- <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.bundle.min.js"></script> -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/js/bootstrap-select.min.js"></script>
+{% endblock javascripts %}

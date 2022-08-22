@@ -14,10 +14,13 @@ from apps.home.utils import getData
 @blueprint.route('/index')
 @login_required
 def index():
-    data = getData()
-    personnes = data["hits"]["hits"]
-    nbrPersonne = len(personnes)
-    return render_template('home/index.html', segment='index',personnes=personnes,nbr=nbrPersonne)
+    try:
+        data = getData()
+        personnes = data["hits"]["hits"]
+        nbrPersonne = len(personnes)
+        return render_template('home/index.html', segment='index',personnes=personnes,nbr=nbrPersonne)
+    except Exception as e:
+        return str(e)
 
 @blueprint.route('/imports')
 def imports():
@@ -29,8 +32,8 @@ def upload_file():
         f = request.files['file']
         
         #return f'uploaded {f.filename}'
-        rep ="/home/abdoulayesarr/Documents/Digital_management/tmp"
-        #rep ="/home/data/Documents/dm/tmp"
+        # rep ="/home/abdoulayesarr/Documents/Digital_management/tmp"
+        rep ="/home/data/Documents/dm/tmp"
         f.save(os.path.join(rep,f.filename))
         flash('file loaded successful','success')
         return render_template('home/import.html')
