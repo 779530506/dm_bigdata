@@ -4,11 +4,11 @@ Copyright (c) 2019 - present AppSeed.us
 """
 
 from apps.home import blueprint
-from flask import render_template, request,flash,redirect
+from flask import render_template, request,flash,redirect,url_for
 from flask_login import login_required
 from jinja2 import TemplateNotFound
 import os
-from apps.home.utils import getData
+from apps.home.utils import getData,getDataSearch,getFields
 
 
 @blueprint.route('/index')
@@ -16,9 +16,10 @@ from apps.home.utils import getData
 def index():
     try:
         data = getData()
+        fields = getFields()
         personnes = data["hits"]["hits"]
         nbrPersonne = len(personnes)
-        return render_template('home/index.html', segment='index',personnes=personnes,nbr=nbrPersonne)
+        return render_template('home/index.html', segment='index',fields=fields,personnes=personnes,nbr=nbrPersonne)
     except Exception as e:
         return str(e)
 
@@ -40,14 +41,18 @@ def upload_file():
 
 @blueprint.route('/search',methods=['GET', 'POST'])
 def search():
-    #try:
-    return request.values
-
-        # personnes = data["hits"]["hits"]
-        # nbrPersonne = len(personnes)
-        # return render_template('home/index.html', segment='index',personnes=personnes,nbr=nbrPersonne)
-    #except Exception as e:
-    #    return str(e)
+    try:
+        colonnes,value = request.values["hidden_colonnes"].split(","),request.values["value"]
+        if request.values["value"]=='':
+            return redirect(url_for('home_blueprint.index'))
+        
+        fields = getFields()
+        data = getDataSearch(colonnes,value)
+        personnes = data["hits"]["hits"]
+        nbrPersonne = len(personnes)
+        return render_template('home/index.html', segment='index',fields=fields,personnes=personnes,nbr=nbrPersonne)
+    except Exception as e:
+        return str(e)
 
 @blueprint.route('/<template>')
 @login_required

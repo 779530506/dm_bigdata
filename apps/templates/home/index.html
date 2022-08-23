@@ -52,9 +52,12 @@
                                 <div class="form-group col-md-8 mb-2">
                                     <select name="colonnes" id="colonnes" class="form-control  selectpicker " 
                                         data-live-search="true" multiple placeholder="select colonne" >
-                                            {% for key in personnes[0]['_source'] %}
+                                        {% if fields %}
+                                            {% for key in fields %}
                                                 <option value="{{key}}"> {{key}}</option>
                                                 {%endfor %}
+            
+                                        {% endif %}        
                                         </select>
                                         <input type="hidden"   name="hidden_colonnes" id="hidden_colonnes" >
 
@@ -64,7 +67,8 @@
                                 </div>
                                
                                 <div class="form-group col-md-12 mb-2">
-                                    <input placeholder="Search" name="submit"  value="submit"  type="submit" class="btn btn-outline-dark my-1 my-sm-0" />
+                                    <Button   type="submit"
+                                     class="btn btn-outline-dark my-1 my-sm-0" > Search .....</button>
                                    
                                 </div>
                                
@@ -74,13 +78,16 @@
                             <div class="table-responsive">
                                 <table class="table bg-red table-striped ">
                                     <thead class="table-dark"> 
+                                        {% if nbr > 0 %}
                                         <tr> {% for key in personnes[0]['_source'] %}
                                             <th>{{key}} </th>
                                             {%endfor %}
 
                                         </tr>
+                                        {% endif %}
                                     </thead>
                                     <tbody>
+                                        {% if nbr > 0 %}
                                         {% for i in range(nbr) %}
                                         <tr> 
                                             {% for key in personnes[i]['_source']%}
@@ -88,7 +95,9 @@
                                             {% endfor%}             
                                         </tr>
                                         {% endfor%}
-                                    
+                                        {% else %}
+                                        <H4>Aucune Correspondance</H4>
+                                    {% endif %}
                                         
                                     </tbody>
                                 </table>
@@ -117,32 +126,10 @@
 
 <script>
     $(document).ready(function(){
-        $('.selectpicker').selectpicker();
-
         $('#colonnes').change(function(){
             $('#hidden_colonnes').val($('#colonnes').val());
         })
-
-        // $('multiple_select_form').on('submit',function(event){
-        //     event.preventDefault();
-        //     if($('#colonnes').val() != ''){
-        //         var form_data = $(this).serialize();
-        //         $.ajax({
-        //             url:"/search",
-        //             method: "POST",
-        //             data:form_data,
-        //             success:function(data){
-        //                 $('#hidden_colonnes').val('');
-        //                 $('.selectpicker').selectpicker('val','');
-        //                 alert (data)
-        //             }
-        //         })
-        //     }
-        //     else{
-        //         alert('please select');
-        //         return false;
-        //     }
-        // })
+       
     })
 </script>
 
