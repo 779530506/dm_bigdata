@@ -38,6 +38,16 @@ def upload_file():
         flash('file loaded successful','success')
         return render_template('home/import.html')
 
+@blueprint.route('/search',methods=['GET', 'POST'])
+def search():
+    #try:
+    return request.values
+
+        # personnes = data["hits"]["hits"]
+        # nbrPersonne = len(personnes)
+        # return render_template('home/index.html', segment='index',personnes=personnes,nbr=nbrPersonne)
+    #except Exception as e:
+    #    return str(e)
 
 @blueprint.route('/<template>')
 @login_required
