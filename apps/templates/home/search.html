@@ -42,37 +42,19 @@
             <div class="row">
         
                 <!-- [ stiped-table ] start -->
-                <div class="col-xl-12">
+                <div class="col-md-12">
                     <div class="card">
                         <div class="card-header">
-                                <!-- method="POST"  action="{{ url_for('home_blueprint.search') }}" 
-                                    <span class="d-block m-t-5">use class <code>table-striped</code> inside table element</span> -->
-                            <form method="post" action="{{ url_for('home_blueprint.search') }}" 
-                            id="multiple_select_form" class="form-inline row ">
-                                <div class="form-group col-md-8 mb-2">
-                                    <select name="colonnes" id="colonnes" class="form-control  selectpicker " 
-                                        data-live-search="true" multiple placeholder="select colonne" >
-                                        {% if fields %}
-                                            {% for key in fields %}
-                                                <option value="{{key}}"> {{key}}</option>
-                                                {%endfor %}
-            
-                                        {% endif %}        
-                                        </select>
+                                
+                                    <form method="POST"  action="{{ url_for('home_blueprint.searchmultiple') }}" >
+                                        <div class="input_fields_wrap">
+                            
+                                        <button type="submit" class="btn btn-primary add_field_button" id="add_field_button">Add More Fields</button>
+                                        </div>
+                                        {% include 'includes/form.html' %}
                                         <input type="hidden"   name="hidden_colonnes" id="hidden_colonnes" >
-
-                                </div>
-                                <div class="form-group col-md-2  mb-2 ">
-                                    <input type="text" class="form-control "  name="value"  placeholder="entré une valeur">
-                                </div>
-                               
-                                <div class="form-group col-md-12 mb-2">
-                                    <Button   type="submit"
-                                     class="btn btn-outline-dark my-1 my-sm-0" > Search .....</button>
-                                   
-                                </div>
-                               
-                            </form>
+                                        <button type="submit" id="submit" class="btn btn-primary ">Submit</button>
+                                    </form>
                         </div>
                         <div class="card-block table-border-style">
                             <div class="table-responsive">
@@ -136,14 +118,39 @@
 <!-- <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.bundle.min.js"></script> -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/js/bootstrap-select.min.js"></script>
 
-<script>
-    $(document).ready(function(){
-        $('#colonnes').change(function(){
-            $('#hidden_colonnes').val($('#colonnes').val());
-        })
+
+     <script>
+        $(document).ready(function() {
+        var max_fields      = 10; //maximum input boxes allowed
+        var wrapper   		= $(".input_fields_wrap"); //Fields wrapper
+        var add_button      = $(".add_field_button"); //Add button ID
+    
+        var x = 1; //initlal text box count
+        $(add_button).click(function(e){ //on add input button click
+        e.preventDefault();
+            if(x < max_fields){ //max input box allowed
+                x++; //text box increment
+                $(wrapper).append('<div class="input-group mb-3"> <select name="colonnes" class="form-control colonnes"  id="colonnes"><option value="first_name">first_name</option><option value="last_name">last_name</option><option value="gender">gender</option><option value="city_of_birth">city_of_birth</option><option value="city">city</option> <option value="status">status</option><option value="last_publication">last_publication</option><option value="mail">mail</option><option value="date_of_birth">date_of_birth</option></select><input placeholder="Enter Price" type="text" name="mytext[]" class="form-control"><div class="input-group-append"><button class="btn btn-outline-danger remove_field" type="button">Remove</button></div></div>'); //add input box
+              
+                
+            }
+        });
+    
+        $(wrapper).on("click",".remove_field", function(e){ //user click on remove text
+            e.preventDefault(); $(this).parent('div').parent('div').remove(); x--;
+            })
+        });
+
        
-    })
-</script>
+        document.getElementById('submit').onclick = function() {
+            var checked = document.querySelectorAll('#colonnes :checked');
+            var selected = [...checked].map(option => option.value);
+            $('#hidden_colonnes').val(selected);
+            
+        }
+      </script>
+     
+
 
 {% endblock javascripts %}
 

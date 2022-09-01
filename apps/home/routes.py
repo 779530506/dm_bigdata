@@ -8,7 +8,7 @@ from flask import render_template, request,flash,redirect,url_for
 from flask_login import login_required
 from jinja2 import TemplateNotFound
 import os
-from apps.home.utils import getData,getDataSearch,getFields
+from apps.home.utils import getData,getDataSearch,getFields,getSearchMultiple
 
 
 @blueprint.route('/index')
@@ -33,11 +33,13 @@ def upload_file():
         f = request.files['file']
         
         #return f'uploaded {f.filename}'
-        # rep ="/home/abdoulayesarr/Documents/Digital_management/tmp"
-        rep ="/home/data/Documents/dm/tmp"
-        f.save(os.path.join(rep,f.filename))
+        rep ="/home/abdoulayesarr/Documents/Digital_management/tmp"
+        #rep ="/home/data/Documents/dm/tmp"
+        f.save(os.path.join(rep,'file1_index_;'))
         flash('file loaded successful','success')
         return render_template('home/import.html')
+
+
 
 @blueprint.route('/search',methods=['GET', 'POST'])
 def search():
@@ -53,6 +55,35 @@ def search():
         return render_template('home/index.html', segment='index',fields=fields,personnes=personnes,nbr=nbrPersonne)
     except Exception as e:
         return str(e)
+
+@blueprint.route('/search_by_colonne')
+def searchByColonne():
+    # try:
+    #     colonnes,value = request.values["hidden_colonnes"].split(","),request.values["value"]
+    #     if request.values["value"]=='':
+    #         return redirect(url_for('home_blueprint.index'))
+        
+    #     fields = getFields()
+    #     data = getDataSearch(colonnes,value)
+    #     personnes = data["hits"]["hits"]
+    #     nbrPersonne = len(personnes)
+    return render_template('home/search.html', segment='search',nbr=0)
+    # except Exception as e:
+    #     return str(e)
+@blueprint.route('/searchmultiple',methods=['GET', 'POST'])
+def searchmultiple():
+    #return request.values
+    v= request.form.getlist('mytext[]')
+    b= request.values["hidden_colonnes"].split(",")
+    fields = getFields()
+    tab=[]
+    for i in range(len(v)):
+        tab.append({b[i]:v[i]})
+    data = getSearchMultiple(tab)
+    personnes = data["hits"]["hits"]
+    nbrPersonne = len(personnes)
+
+    return render_template('home/search.html', segment='index',fields=fields,personnes=personnes,nbr=nbrPersonne)
 
 @blueprint.route('/<template>')
 @login_required
