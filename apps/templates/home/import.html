@@ -41,13 +41,16 @@
                                         </div>
                                         <div class="card-body">
                                           <div class="alert-success">
-                                            {% with messages = get_flashed_messages() %}
+                                            <!-- {% with messages = get_flashed_messages() %}
                                                     {% if messages %}
                                                         {% for message in messages %}
                                                             {{ message }}
                                                         {% endfor %}
                                                     {% endif %}
-                                                    {% endwith %}
+                                                    {% endwith %} -->
+                                            {% for category, message in get_flashed_messages(with_categories=True) %}
+                                            <div class="alert-{{category}}">Error: {{ message }}</div>
+                                            {% endfor %}
                                           </div>
                                             <div class="row">
                                                 <div class="col-md-12">

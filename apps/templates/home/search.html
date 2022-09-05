@@ -51,13 +51,18 @@
                             
                                         <button type="submit" class="btn btn-primary add_field_button" id="add_field_button">Add More Fields</button>
                                         </div>
-                                        {% include 'includes/form.html' %}
+                                       
                                         <input type="hidden"   name="hidden_colonnes" id="hidden_colonnes" >
                                         <button type="submit" id="submit" class="btn btn-primary ">Submit</button>
                                     </form>
                         </div>
                         <div class="card-block table-border-style">
                             <div class="table-responsive">
+                                {% if nbr > 0 %}
+                                <h5>Total result: {{ total }}</h5>
+                                {%else %}
+                                <h5>Total result: {{ total }}</h5>
+                                {% endif %}
                                 <table class="table bg-red table-striped ">
                                     <thead class="table-dark"> 
                                         {% if nbr > 0 %}
@@ -130,7 +135,7 @@
         e.preventDefault();
             if(x < max_fields){ //max input box allowed
                 x++; //text box increment
-                $(wrapper).append('<div class="input-group mb-3"> <select name="colonnes" class="form-control colonnes"  id="colonnes"><option value="first_name">first_name</option><option value="last_name">last_name</option><option value="gender">gender</option><option value="city_of_birth">city_of_birth</option><option value="city">city</option> <option value="status">status</option><option value="last_publication">last_publication</option><option value="mail">mail</option><option value="date_of_birth">date_of_birth</option></select><input placeholder="Enter Price" type="text" name="mytext[]" class="form-control"><div class="input-group-append"><button class="btn btn-outline-danger remove_field" type="button">Remove</button></div></div>'); //add input box
+                $(wrapper).append('<div class="input-group mb-3"> <select name="colonnes" class="form-control colonnes"  id="colonnes"><option value="UID">UID</option><option value="number">number</option><option value="first_name">first_name</option><option value="last_name">last_name</option><option value="gender">gender</option><option value="city_of_birth">city_of_birth</option><option value="city">city</option> <option value="status">status</option><option value="last_publication">last_publication</option><option value="mail">mail</option><option value="date_of_birth">date_of_birth</option></select><input placeholder="Enter Price" type="text" name="mytext[]" class="form-control" required><div class="input-group-append"><button class="btn btn-outline-danger remove_field" type="button">Remove</button></div></div>'); //add input box
               
                 
             }

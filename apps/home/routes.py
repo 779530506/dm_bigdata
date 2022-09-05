@@ -9,6 +9,7 @@ from flask_login import login_required
 from jinja2 import TemplateNotFound
 import os
 from apps.home.utils import getData,getDataSearch,getFields,getSearchMultiple
+from datetime import datetime
 
 
 @blueprint.route('/index')
@@ -18,8 +19,9 @@ def index():
         data = getData()
         fields = getFields()
         personnes = data["hits"]["hits"]
+        total = data["hits"]["total"]
         nbrPersonne = len(personnes)
-        return render_template('home/index.html', segment='index',fields=fields,personnes=personnes,nbr=nbrPersonne)
+        return render_template('home/index.html', total=total,segment='index',fields=fields,personnes=personnes,nbr=nbrPersonne)
     except Exception as e:
         return str(e)
 
@@ -27,17 +29,30 @@ def index():
 def imports():
     return render_template('home/import.html', segment='imports')
 
+ALLOWED_EXTENSIONS = set(['csv','txt'])
+
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
 @blueprint.route('/upload', methods=['GET', 'POST'])
 def upload_file():
     if request.method == 'POST':
-        f = request.files['file']
-        
+        file = request.files['file']
+        if file and allowed_file(file.filename):
         #return f'uploaded {f.filename}'
-        rep ="/home/abdoulayesarr/Documents/Digital_management/tmp"
-        #rep ="/home/data/Documents/dm/tmp"
-        f.save(os.path.join(rep,'file1_index_;'))
-        flash('file loaded successful','success')
-        return render_template('home/import.html')
+            rep ="/home/abdoulayesarr/Documents/Digital_management/tmp"
+            #rep ="/home/data/Documents/dm/tmp"
+            new_filename = f'{file.filename.split(".")[0]}_{str(datetime.now())}.csv'
+            file.save(os.path.join(rep,new_filename))
+            #output = process_csv(os.path.join(rep,new_filename))
+
+            flash('file loaded successful','success')
+            return render_template('home/import.html')
+        else:
+            flash('format de fichier incorrect','danger')
+            #return redirect(url_for('home_blueprint.upload_file'))
+            return render_template('home/import.html')
 
 
 
@@ -50,9 +65,10 @@ def search():
         
         fields = getFields()
         data = getDataSearch(colonnes,value)
+        total = data["hits"]["total"]
         personnes = data["hits"]["hits"]
         nbrPersonne = len(personnes)
-        return render_template('home/index.html', segment='index',fields=fields,personnes=personnes,nbr=nbrPersonne)
+        return render_template('home/index.html',total=total, segment='index',fields=fields,personnes=personnes,nbr=nbrPersonne)
     except Exception as e:
         return str(e)
 
@@ -67,7 +83,8 @@ def searchByColonne():
     #     data = getDataSearch(colonnes,value)
     #     personnes = data["hits"]["hits"]
     #     nbrPersonne = len(personnes)
-    return render_template('home/search.html', segment='search',nbr=0)
+    fields = getFields()
+    return render_template('home/search.html', segment='searchmultiple',nbr=0)
     # except Exception as e:
     #     return str(e)
 @blueprint.route('/searchmultiple',methods=['GET', 'POST'])
@@ -78,12 +95,18 @@ def searchmultiple():
     fields = getFields()
     tab=[]
     for i in range(len(v)):
+        if b[i]=="number" or b[i]=="UID" :
+            try:
+                v[i] = int(v[i])
+            except:
+                return render_template('home/search.html', segment='searchmultiple',nbr=0)
         tab.append({b[i]:v[i]})
     data = getSearchMultiple(tab)
     personnes = data["hits"]["hits"]
+    total = data["hits"]["total"]
     nbrPersonne = len(personnes)
 
-    return render_template('home/search.html', segment='index',fields=fields,personnes=personnes,nbr=nbrPersonne)
+    return render_template('home/search.html', segment='searchmultiple',total=total,fields=fields,personnes=personnes,nbr=nbrPersonne)
 
 @blueprint.route('/<template>')
 @login_required

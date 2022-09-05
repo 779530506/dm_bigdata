@@ -76,6 +76,11 @@
                         </div>
                         <div class="card-block table-border-style">
                             <div class="table-responsive">
+                                {% if nbr > 0 %}
+                                <h5>Total result: {{ total }}</h5>
+                                {%else %}
+                                <h5>Total result: {{ total }}</h5>
+                                {% endif %}
                                 <table class="table bg-red table-striped ">
                                     <thead class="table-dark"> 
                                         {% if nbr > 0 %}
