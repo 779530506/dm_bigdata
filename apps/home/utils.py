@@ -11,15 +11,21 @@ import os
 from collections import defaultdict
 from datetime import datetime
 from decimal import Decimal
-# import pandas as pd
-# def process_csv(filename):
-#     file = pd.read_csv(filename)
-   
-#     # adding header
-#     headerList = ['name', 'age']
+import pandas as pd
+def process_csv(filename,sep,colonnnes,setHeader):
     
-#     # converting data frame to csv
-#     file.to_csv(filename, header=headerList, index=False)
+    df = pd.read_csv(filename,sep=sep)
+    # adding header
+    #headerList = ['name','ages']
+    rep ="/home/abdoulayesarr/Documents/Digital_management/nifi"
+    #rep ="/home/data/Documents/dm/tmp"
+    new_filename = f'{str(datetime.now())}.csv'
+    filename=os.path.join(rep,new_filename)
+ 
+    if setHeader=="oui":
+        df.to_csv(filename, header=colonnnes, index=False)
+    else:
+        df.to_csv(filename, index=False)
 
     # with open(filename, 'r') as f:
     #     reader = csv.DictReader(f)
