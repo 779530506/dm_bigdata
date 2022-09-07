@@ -73,9 +73,9 @@
                                             <td>
                                             <select name="colonnes" id="colonnes" class="form-control colonnes"  id="colonnes">
                                              {% if fields %}
-      
-                                                {% for key in fields %}
-                                                    <option value="{{key}}"> {{key}}</option>
+                                             <option value="delete">Delete</option>
+                                                {% for value in fields %}
+                                                    <option value="{{value}}" checked> {{value}}</option>
                                                     {%endfor %}
                                             {% endif %}  
                                              </select>
@@ -85,12 +85,22 @@
                                                 
                                             
                                         </tr>
-                                         <tr>
+                                         <!-- <tr>
                                           {% for value in colonnes%} 
                                           <th>{{value}}</th>
                                           {% endfor %}
-                                        </tr> 
-                                       
+                                        </tr>  -->
+
+                                        <tr>
+                                            
+                                            {% for value in colonnes %}
+                                            <td>              
+                                                <input value="{{value}}" type="text"
+                                                 name="mytext[]" class="form-control" readonly="true" >
+                                                   
+                                            </td>
+                                            {%endfor %}
+                                        </tr>
                                     </thead>
                                     <tbody>
                                       

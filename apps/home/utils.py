@@ -12,7 +12,7 @@ from collections import defaultdict
 from datetime import datetime
 from decimal import Decimal
 import pandas as pd
-def process_csv(filename,sep,colonnnes,setHeader):
+def process_csv(filename,sep,head,setHeader,columns):
     
     df = pd.read_csv(filename,sep=sep)
     # adding header
@@ -21,9 +21,15 @@ def process_csv(filename,sep,colonnnes,setHeader):
     #rep ="/home/data/Documents/dm/tmp"
     new_filename = f'{str(datetime.now())}.csv'
     filename=os.path.join(rep,new_filename)
- 
+    #delete colonne none
+    header,colonne=[],[]
+    for i in range(len(head)):
+        if (head[i]!="delete"):
+            header.append(head[i])
+            colonne.append(columns[i])
+
     if setHeader=="oui":
-        df.to_csv(filename, header=colonnnes, index=False)
+        df.to_csv(filename, header=header,columns=colonne, index=False)
     else:
         df.to_csv(filename, index=False)
 

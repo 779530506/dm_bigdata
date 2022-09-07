@@ -72,9 +72,10 @@ def saved_file():
         sep = request.values['sep']
         header = request.values['header']
         colonnes= request.values["hidden_colonnes"].split(",")
+        cols= request.form.getlist('mytext[]')
         #if(header=="oui"):
         try:
-            process_csv(file,sep,colonnes,header)
+            process_csv(file,sep,colonnes,header,cols)
             flash('file loaded successful','success')
             return render_template('home/import.html',segment='imports',)
         except:
