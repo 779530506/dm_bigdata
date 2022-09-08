@@ -50,7 +50,9 @@ def upload_file():
             #output = process_csv(os.path.join(rep,new_filename))
             filename=os.path.join(rep,new_filename)
             #with open(os.path.join(rep,new_filename)) as file:
-            data = pd.read_csv(filename,header=0,sep=delimiter) 
+            if(delimiter=="tab"):
+                delimiter="\t"
+            data = pd.read_csv(filename,header=0,sep=delimiter,encoding= 'unicode_escape') 
             colonnes=[]
             
             myData = data.values[:5]
