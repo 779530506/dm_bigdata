@@ -41,11 +41,15 @@ def upload_file():
     if request.method == 'POST':
         file = request.files['file']
         delimiter=request.values['delimiter']
+        index_type=request.values['index_type']
+        if index_type=="Other" and request.values['new_index_type'] != "":
+            index_type=request.values['new_index_type']
+
         if file and allowed_file(file.filename):
         #return f'uploaded {f.filename}'
             rep ="/home/abdoulayesarr/Documents/Digital_management/tmp"
             #rep ="/home/data/Documents/dm/tmp"
-            new_filename = f'{file.filename.split(".")[0]}_{str(datetime.now())}.csv'
+            new_filename = f'{index_type}_{file.filename.split(".")[0]}_{str(datetime.now())}.csv'
             file.save(os.path.join(rep,new_filename))
             #output = process_csv(os.path.join(rep,new_filename))
             filename=os.path.join(rep,new_filename)
@@ -77,8 +81,11 @@ def saved_file():
         cols= request.form.getlist('mytext[]')
         #if(header=="oui"):
         try:
+            startDate = datetime.now()
             process_csv(file,sep,colonnes,header,cols)
-            flash('file loaded successful','success')
+            endDate = datetime.now() - startDate
+            tmin = round((endDate.total_seconds())/60,4)
+            flash('file loaded successful %s'%tmin,'success')
             return render_template('home/import.html',segment='imports',)
         except:
             flash('Erreur, file error','danger')

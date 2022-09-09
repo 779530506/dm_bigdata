@@ -30,29 +30,32 @@ def bulk_json_data(json_list, _index, doc_type):
 '''
 load data to elastic search
 '''
-def load_to_elastic(filename):
+def load_to_elastic(df,doc_type):
     client = Elasticsearch("http://localhost:9200")
-    df = pd.read_csv(filename,sep=",",encoding= 'unicode_escape')
+    #df = pd.read_csv(filename,sep=",",encoding= 'unicode_escape')
     df = df.replace(np.nan, '', regex=True)
     df2=df.to_dict("record")
 
     try:
         # make the bulk call, and get a response
-        response = helpers.bulk(client, bulk_json_data(df2, "dm", "people"))
+        response = helpers.bulk(client, bulk_json_data(df2, "dmx", doc_type))
         print ("\nbulk_json_data() RESPONSE:", response)
+        breakpoint()
+
         return response
     except Exception as e:
         print("\nERROR:", e)
 
 def process_csv(filename,sep,head,setHeader,columns):
-    
+    doc_type=(filename.split("/")[-1]).split("_")[0] # recuperer le type
     df = pd.read_csv(filename,sep=sep,encoding= 'unicode_escape')
     # adding header
     #headerList = ['name','ages']
-    rep ="/home/abdoulayesarr/Documents/Digital_management/nifi"
-    #rep ="/home/data/Documents/dm/tmp"
-    new_filename = f'{str(datetime.now())}.csv'
-    filename=os.path.join(rep,new_filename)
+    # rep ="/home/abdoulayesarr/Documents/Digital_management/nifi"
+    # #rep ="/home/data/Documents/dm/tmp"
+    # new_filename = f'{str(datetime.now())}.csv'
+    # filename=os.path.join(rep,new_filename)
+    
     #delete colonne none
     header,colonne=[],[]
     for i in range(len(head)):
@@ -61,27 +64,23 @@ def process_csv(filename,sep,head,setHeader,columns):
             colonne.append(columns[i])
 
     if setHeader=="oui":
-        df.to_csv(filename, header=header,columns=colonne, index=False)
-    else:
-        df.to_csv(filename, index=False)
+        df = df[colonne]
+        df.columns = header
+        #df.to_csv(filename, header=header,columns=colonne, index=False)
+    # else:
+    #     df.to_csv(filename, index=False)
     
-    load_to_elastic(filename)
+    load_to_elastic(df,doc_type)
 
-    # with open(filename, 'r') as f:
-    #     reader = csv.DictReader(f)
-    #     tab=[]
-    #     for row in reader:
-    #         tab.append(row)
-    #     breakpoint()
-    #     return tab
+
   
 def getData():
     client = Elasticsearch("http://localhost:9200",)
-    resp = client.search(index="dm", body={'size' : 6000, 'query':{"match_all": {}}})
+    resp = client.search(index="dmx", body={'size' : 6000, 'query':{"match_all": {}}})
     return resp
 def getDataSearch(colonnes,value):
     client = Elasticsearch("http://localhost:9200",)
-    resp = client.search(index="dm", body={'size' : 6000, 'query':{
+    resp = client.search(index="dmx", body={'size' : 6000, 'query':{
         "multi_match": {
         "query" : value,
         "fields": colonnes
@@ -90,7 +89,7 @@ def getDataSearch(colonnes,value):
     return resp
 def getFields():
     # client = Elasticsearch("http://localhost:9200",)
-    # resp = client.search(index="dm", body={'size' : 1, 'query':{"match_all": {}}})
+    # resp = client.search(index="dmx", body={'size' : 1, 'query':{"match_all": {}}})
     # personnes = resp["hits"]["hits"]
     # fields=[]
     # for key in personnes[0]['_source']:
@@ -103,7 +102,7 @@ def getSearchMultiple(req):
         query.append({"match": req[i]})
     print(query)
     client = Elasticsearch("http://localhost:9200",)
-    resp = client.search(index="dm", body={'size' : 6000, 'query':{
+    resp = client.search(index="dmx", body={'size' : 6000, 'query':{
         "bool":{"must":query}
         }})
     return resp
