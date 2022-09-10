@@ -8,7 +8,7 @@ from flask import render_template, request,flash,redirect,url_for
 from flask_login import login_required
 from jinja2 import TemplateNotFound
 import os
-from apps.home.utils import getData,getDataSearch,getFields,getSearchMultiple,process_csv
+from apps.home.utils import createOrUpdateDocType,getAllDocType, getData,getDataSearch,getFields,getSearchMultiple,process_csv
 from datetime import datetime
 import pandas as pd
 
@@ -79,12 +79,15 @@ def saved_file():
         header = request.values['header']
         colonnes= request.values["hidden_colonnes"].split(",")
         cols= request.form.getlist('mytext[]')
+        doc_type=(file.split("/")[-1]).split("_")[0]
         #if(header=="oui"):
         try:
             startDate = datetime.now()
+            createOrUpdateDocType(doc_type,"pending....")
             process_csv(file,sep,colonnes,header,cols)
             endDate = datetime.now() - startDate
             tmin = round((endDate.total_seconds())/60,4)
+            createOrUpdateDocType(doc_type,"terminé en %s minute"%tmin)
             flash('file loaded successful %s'%tmin,'success')
             return render_template('home/import.html',segment='imports',)
         except:
@@ -111,19 +114,11 @@ def search():
 
 @blueprint.route('/search_by_colonne')
 def searchByColonne():
-    # try:
-    #     colonnes,value = request.values["hidden_colonnes"].split(","),request.values["value"]
-    #     if request.values["value"]=='':
-    #         return redirect(url_for('home_blueprint.index'))
-        
-    #     fields = getFields()
-    #     data = getDataSearch(colonnes,value)
-    #     personnes = data["hits"]["hits"]
-    #     nbrPersonne = len(personnes)
     fields = getFields()
     return render_template('home/search.html', segment='searchmultiple',nbr=0)
     # except Exception as e:
     #     return str(e)
+
 @blueprint.route('/searchmultiple',methods=['GET', 'POST'])
 def searchmultiple():
     #return request.values
@@ -144,6 +139,11 @@ def searchmultiple():
     nbrPersonne = len(personnes)
 
     return render_template('home/search.html', segment='searchmultiple',total=total,fields=fields,personnes=personnes,nbr=nbrPersonne)
+
+@blueprint.route('/statut')
+def statut():
+    doc_type = getAllDocType()
+    return render_template('home/statut.html', segment='statut',doc_type=doc_type)
 
 @blueprint.route('/<template>')
 @login_required

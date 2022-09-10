@@ -30,7 +30,12 @@
                     <a href="/search_by_colonne" class="nav-link "><span class="pcoded-micon"><i class="feather icon-home"></i></span><span
                             class="pcoded-mtext">Search By Colonne</span></a>
                 </li>
-           
+                
+                <li data-username="statut" 
+                    class="nav-item {% if 'statut' in segment %} active {% endif %}">
+                    <a href="{{ url_for('home_blueprint.statut') }}" class="nav-link "><span class="pcoded-micon"><i class="feather icon-home"></i></span><span
+                            class="pcoded-mtext">Statut</span></a>
+                </li>
 
                             
             </ul>

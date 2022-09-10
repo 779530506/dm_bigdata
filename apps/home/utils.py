@@ -2,6 +2,7 @@ import requests
 import json
 from elasticsearch import Elasticsearch
 from elasticsearch import Elasticsearch, helpers
+from apps.home.toDatabase import create_doc_type,get_doc_type,update_doc_type,getAll_doc_type
 
 # Create the client instance
 
@@ -23,7 +24,7 @@ def bulk_json_data(json_list, _index, doc_type):
     # isn't loaded into memory
         yield {
             "_index": _index,
-            "_type": doc_type,
+            "_type": "doc",
             "_id": uuid.uuid4(),
             "_source": doc
         }
@@ -38,13 +39,13 @@ def load_to_elastic(df,doc_type):
 
     try:
         # make the bulk call, and get a response
-        response = helpers.bulk(client, bulk_json_data(df2, "dmx", doc_type))
+        response = helpers.bulk(client, bulk_json_data(df2, "digital", doc_type))
         print ("\nbulk_json_data() RESPONSE:", response)
-        breakpoint()
 
         return response
     except Exception as e:
         print("\nERROR:", e)
+
 
 def process_csv(filename,sep,head,setHeader,columns):
     doc_type=(filename.split("/")[-1]).split("_")[0] # recuperer le type
@@ -72,15 +73,21 @@ def process_csv(filename,sep,head,setHeader,columns):
     
     load_to_elastic(df,doc_type)
 
+def createOrUpdateDocType(name,statut):
+    if name ==get_doc_type(name):
+        update_doc_type(name,statut)
+    else:
+        create_doc_type(name,statut)
+def getAllDocType():
+    return getAll_doc_type()
 
-  
 def getData():
     client = Elasticsearch("http://localhost:9200",)
-    resp = client.search(index="dmx", body={'size' : 6000, 'query':{"match_all": {}}})
+    resp = client.search(index="digital", body={'size' : 6000, 'query':{"match_all": {}}})
     return resp
 def getDataSearch(colonnes,value):
     client = Elasticsearch("http://localhost:9200",)
-    resp = client.search(index="dmx", body={'size' : 6000, 'query':{
+    resp = client.search(index="digital", body={'size' : 6000, 'query':{
         "multi_match": {
         "query" : value,
         "fields": colonnes
@@ -89,7 +96,7 @@ def getDataSearch(colonnes,value):
     return resp
 def getFields():
     # client = Elasticsearch("http://localhost:9200",)
-    # resp = client.search(index="dmx", body={'size' : 1, 'query':{"match_all": {}}})
+    # resp = client.search(index="digital", body={'size' : 1, 'query':{"match_all": {}}})
     # personnes = resp["hits"]["hits"]
     # fields=[]
     # for key in personnes[0]['_source']:
@@ -102,7 +109,7 @@ def getSearchMultiple(req):
         query.append({"match": req[i]})
     print(query)
     client = Elasticsearch("http://localhost:9200",)
-    resp = client.search(index="dmx", body={'size' : 6000, 'query':{
+    resp = client.search(index="digital", body={'size' : 6000, 'query':{
         "bool":{"must":query}
         }})
     return resp
