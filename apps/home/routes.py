@@ -8,6 +8,7 @@ from flask import render_template, request,flash,redirect,url_for
 from flask_login import login_required
 from jinja2 import TemplateNotFound
 import os
+from apps.home.thread import Compute
 from apps.home.utils import createOrUpdateDocType,getAllDocType, getData,getDataSearch,getFields,getSearchMultiple,process_csv
 from datetime import datetime
 import pandas as pd
@@ -24,6 +25,13 @@ def index():
         return render_template('home/index.html', total=total,segment='index',fields=fields,personnes=personnes,nbr=nbrPersonne)
     except Exception as e:
         return str(e)
+
+@blueprint.route('/thread', methods=['GET', 'POST'])
+def thread():
+
+    thread_a = Compute(request.__copy__())
+    thread_a.start()
+    return "Processing in background", 200
 
 @blueprint.route('/imports')
 def imports():
@@ -82,6 +90,7 @@ def saved_file():
         doc_type=(file.split("/")[-1]).split("_")[0]
         #if(header=="oui"):
         try:
+            
             startDate = datetime.now()
             createOrUpdateDocType(doc_type,"pending....")
             process_csv(file,sep,colonnes,header,cols)

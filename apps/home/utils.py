@@ -11,7 +11,6 @@ import os
 
 from collections import defaultdict
 from datetime import datetime
-from decimal import Decimal
 import pandas as pd, numpy as np, uuid
 
 ''''
@@ -50,13 +49,7 @@ def load_to_elastic(df,doc_type):
 def process_csv(filename,sep,head,setHeader,columns):
     doc_type=(filename.split("/")[-1]).split("_")[0] # recuperer le type
     df = pd.read_csv(filename,sep=sep,encoding= 'unicode_escape')
-    # adding header
-    #headerList = ['name','ages']
-    # rep ="/home/abdoulayesarr/Documents/Digital_management/nifi"
-    # #rep ="/home/data/Documents/dm/tmp"
-    # new_filename = f'{str(datetime.now())}.csv'
-    # filename=os.path.join(rep,new_filename)
-    
+
     #delete colonne none
     header,colonne=[],[]
     for i in range(len(head)):
