@@ -12,6 +12,8 @@ from apps.home.thread import Compute
 from apps.home.utils import createOrUpdateDocType,getAllDocType, getData,getDataSearch,getFields,getSearchMultiple,process_csv
 from datetime import datetime
 import pandas as pd
+import threading
+
 
 @blueprint.route('/index')
 @login_required
@@ -26,12 +28,7 @@ def index():
     except Exception as e:
         return str(e)
 
-@blueprint.route('/thread', methods=['GET', 'POST'])
-def thread():
 
-    thread_a = Compute(request.__copy__())
-    thread_a.start()
-    return "Processing in background", 200
 
 @blueprint.route('/imports')
 def imports():
@@ -97,14 +94,22 @@ def saved_file():
             endDate = datetime.now() - startDate
             tmin = round((endDate.total_seconds())/60,4)
             createOrUpdateDocType(doc_type,"terminé en %s minute"%tmin)
-            flash('file loaded successful %s'%tmin,'success')
+            # thread_a = Compute(doc_type,file,sep,colonnes,header,cols)
+            # thread_a.start()
+            flash('file loqd successfull','success')
             return render_template('home/import.html',segment='imports',)
         except:
             flash('Erreur, file error','danger')
             return render_template('home/import.html',segment='imports',)
 
     return request.values
-
+# def background(doc_type,file,sep,colonnes,header,cols):
+#     startDate = datetime.now()
+#     createOrUpdateDocType(doc_type,"pending....")
+#     process_csv(file,sep,colonnes,header,cols)
+#     endDate = datetime.now() - startDate
+#     tmin = round((endDate.total_seconds())/60,4)
+#     createOrUpdateDocType(doc_type,"terminé en %s minute"%tmin)
 @blueprint.route('/search',methods=['GET', 'POST'])
 def search():
     try:

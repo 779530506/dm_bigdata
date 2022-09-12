@@ -17,13 +17,13 @@ import pandas as pd, numpy as np, uuid
 generator to push bulk data from a JSON
 file into an Elasticsearch index
 '''
-def bulk_json_data(json_list, _index, doc_type):
+def bulk_json_data(json_list, _index):
     for doc in json_list:
     # use a `yield` generator so that the data
     # isn't loaded into memory
         yield {
             "_index": _index,
-            "_type": "doc",
+            "_type": "_doc",
             "_id": uuid.uuid4(),
             "_source": doc
         }
@@ -38,7 +38,7 @@ def load_to_elastic(df,doc_type):
 
     try:
         # make the bulk call, and get a response
-        response = helpers.bulk(client, bulk_json_data(df2, "digital", doc_type))
+        response = helpers.bulk(client, bulk_json_data(df2, doc_type))
         print ("\nbulk_json_data() RESPONSE:", response)
 
         return response

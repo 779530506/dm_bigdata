@@ -14,10 +14,6 @@ def get_doc_type(name):
     except:
         return False
 def getAll_doc_type():
-    # docs = DocTypes.query.all()
-    # for doc in docs:
-    #     db.session.delete(doc)
-    #     db.session.commit()
     try:
         return DocTypes.query.all()
     except:
