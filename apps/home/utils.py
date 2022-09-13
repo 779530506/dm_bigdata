@@ -3,7 +3,7 @@ import json
 from elasticsearch import Elasticsearch
 from elasticsearch import Elasticsearch, helpers
 from apps.home.toDatabase import create_doc_type,get_doc_type,update_doc_type,getAll_doc_type
-
+from apps.home.merge_index import get_merged_records
 # Create the client instance
 
 import csv
@@ -106,3 +106,10 @@ def getSearchMultiple(req):
         "bool":{"must":query}
         }})
     return resp
+
+def mergeIndex(index1, index2,commonField):
+    client = Elasticsearch("http://localhost:9200")
+
+    helpers.bulk(client, get_merged_records(client,index1, index2,commonField),
+                index="italia2",
+                chunk_size=1000)

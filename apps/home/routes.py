@@ -9,7 +9,7 @@ from flask_login import login_required
 from jinja2 import TemplateNotFound
 import os
 from apps.home.thread import Compute
-from apps.home.utils import createOrUpdateDocType,getAllDocType, getData,getDataSearch,getFields,getSearchMultiple,process_csv
+from apps.home.utils import mergeIndex,createOrUpdateDocType,getAllDocType, getData,getDataSearch,getFields,getSearchMultiple,process_csv
 from datetime import datetime
 import pandas as pd
 import threading
@@ -19,6 +19,7 @@ import threading
 @login_required
 def index():
     try:
+        mergeIndex("italia","italia1","number")
         data = getData()
         fields = getFields()
         personnes = data["hits"]["hits"]
