@@ -38,7 +38,7 @@ def load_to_elastic(df,doc_type):
 
     try:
         # make the bulk call, and get a response
-        response = helpers.bulk(client, bulk_json_data(df2, doc_type))
+        response = helpers.bulk(client, bulk_json_data(df2, doc_type),chunk_size=150000)
         print ("\nbulk_json_data() RESPONSE:", response)
 
         return response
@@ -107,9 +107,14 @@ def getSearchMultiple(req):
         }})
     return resp
 
-def mergeIndex(index1, index2,commonField):
+def mergeIndex(index1,commonField):
     client = Elasticsearch("http://localhost:9200")
+    index2 = "digital"
+    try:
+        response=helpers.bulk(client, get_merged_records(client,index1, index2,commonField),
+                    index="dm",
+                    chunk_size=1000)
+        return response
+    except  Exception as e:
+        raise Exception('Error jointure %s'%str(e))
 
-    helpers.bulk(client, get_merged_records(client,index1, index2,commonField),
-                index="italia2",
-                chunk_size=1000)

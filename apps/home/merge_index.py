@@ -18,17 +18,13 @@ def get_merged_records(es, in1, in2, commonField):
        ]
     }
 
-    for doc in helpers.scan(es,
-                        index=in1+","+in2,
-                        query=mergeQuery,
-                        size=1000,
+    for doc in helpers.scan(es,index=in1+","+in2,query=mergeQuery,size=100,
                         scroll="1m",
                         preserve_order=True):
 
-        
-
         docSrc=doc["_source"]
-        thisEntityId = docSrc[commonField]
+        thisEntityId = docSrc.get(commonField)
+        
         if thisEntityId == lastEntityId:
             # Copy all fields from docSrc to merged doc
             mergedDoc.update(docSrc)

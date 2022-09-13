@@ -37,17 +37,11 @@
                                 <div class="col-sm-12">
                                     <div class="card">
                                         <div class="card-header">
-                                            <h5>Importation de données</h5>
+                                            <h5>Jointure</h5>
                                         </div>
                                         <div class="card-body">
                                           <div class="alert-success">
-                                            <!-- {% with messages = get_flashed_messages() %}
-                                                    {% if messages %}
-                                                        {% for message in messages %}
-                                                            {{ message }}
-                                                        {% endfor %}
-                                                    {% endif %}
-                                                    {% endwith %} -->
+                                    
                                             {% for category, message in get_flashed_messages(with_categories=True) %}
                                             <div class="alert-{{category}}"> {{ message }}</div>
                                             {% endfor %}
@@ -56,55 +50,32 @@
                                                 <div class="col-md-12">
                                                     
 
-                                                    <form method="POST"  action="{{ url_for('home_blueprint.upload_file') }}" enctype="multipart/form-data">
-                                                        <div class="form-group">
-                                                            <label for="formFileLg" class="form-label">Upload CSV</label>
-                                                             <input class="form-control form-control-lg" name="file" id="formFileLg" type="file" required>
-                                                        </div>
+                                                    <form method="POST"  action="{{ url_for('home_blueprint.merge') }}" enctype="multipart/form-data">
+                                                    
                                                         <div class="form-group">
                                                             <div class="row">
                                                             <div class="col-md-6">
                                                                 <label for="exampleFormControlSelect1">Index</label>
-                                                                <select class="form-control" name="index_type" id="exampleFormControlSelect1">
+                                                                <select class="form-control" name="index" id="exampleFormControlSelect1">
                                                                     {% for doc in doc_type %}
                                                                     <option value="{{doc.name}}">{{doc.name}}</option>
                                                                     {% endfor %}
                                                                 </select>
                                                             </div>
-                                                            <div class="col-md-6">
-                                                            <label for="exampleInputEmail1">If Other</label>
-                                                            <input type="text" name="new_index_type" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" >
-                                                          </div>
+                                                            <div class="col-md-5">
+                                                                <label for="exampleFormControlSelect1">Colonne jointure</label>
+                                                                <select class="form-control" name="commonField" id="exampleFormControlSelect1">
+                                                                    <option value="number">Number</option>
+                                                                    <option value="UID">UID</option>
+                                                                    <option value="telephone">Telephone</option>
+                                                                </select>
+                                                            </div>
+                                                    
                                                         </div>
                                                     </div>
-                        
-                                                        <div class="form-group">
-                                                            
-
-                                                            <div class="row">
-                                                                <div class="col-md-6">
-                                                                    <label for="exampleFormControlSelect1">Delimiter</label>
-                                                                    <select class="form-control" name="delimiter" id="exampleFormControlSelect1">
-                                                                        <option>,</option>
-                                                                        <option>;</option>
-                                                                        <option>: </option>
-                                                                        <option>|</option>
-                                                                        <option>tab</option>
-                                                                    </select>
-                                                                </div>
-                                                                <!-- <div class="col-md-6">
-                                                                    <div class="form-check form-switch"><br>
-                                                                        
-                                                                        <input class="form-check-input" type="checkbox" id="mySwitch" name="header" value="0" checked>
-                                                                        <label class="form-check-label" for="mySwitch">Header</label>
-                                                                    </div>
-                                                              </div> -->
-                                                            </div>
-                                                            
-                                                        </div>
                                                         <div class="row">
                                                             <!-- <div class="col-md-6">  <button  class="btn btn-primary">preview</button> </div> -->
-                                                            <div class="col-md-4">  <button type="submit" class="btn btn-primary">Preview</button> </div>
+                                                            <div class="col-md-4">  <button type="submit" class="btn btn-primary">Update</button> </div>
                                                         </div>
                                                        
                                                         

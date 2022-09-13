@@ -19,7 +19,7 @@ import threading
 @login_required
 def index():
     try:
-        mergeIndex("italia","italia1","number")
+        #mergeIndex("italia","italia1","number")
         data = getData()
         fields = getFields()
         personnes = data["hits"]["hits"]
@@ -33,7 +33,8 @@ def index():
 
 @blueprint.route('/imports')
 def imports():
-    return render_template('home/import.html', segment='imports')
+    doc_type = getAllDocType()
+    return render_template('home/import.html', segment='imports',doc_type=doc_type)
 
 ALLOWED_EXTENSIONS = set(['csv','txt'])
 
@@ -41,9 +42,36 @@ def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
+@blueprint.route('/merge', methods=['GET', 'POST'])
+def merge():
+    doc_type = getAllDocType()
+    if request.method == 'POST':
+        index=request.values['index']
+        commonField=request.values['commonField']
+        index_join=index+"_jointure"
+        startDate = datetime.now()
+        createOrUpdateDocType(index_join,"pending....")
+
+        try:
+            mergeIndex(index,commonField)
+        except Exception as e:
+            flash('Erreur jointure','danger')
+            return render_template('home/merge_index.html', segment='merge',doc_type=doc_type)
+
+        endDate = datetime.now() - startDate
+        tmin = round((endDate.total_seconds())/60,4)
+        createOrUpdateDocType(index_join,"terminé en %s minute"%tmin)
+        
+        
+        flash('Start jointure','success')
+        return render_template('home/merge_index.html', segment='merge',doc_type=doc_type)
+    return render_template('home/merge_index.html', segment='merge',doc_type=doc_type)
+
+
 @blueprint.route('/upload', methods=['GET', 'POST'])
 def upload_file():
     fields = getFields()
+    doc_type = getAllDocType()
     if request.method == 'POST':
         file = request.files['file']
         delimiter=request.values['delimiter']
@@ -75,10 +103,11 @@ def upload_file():
         else:
             flash('format de fichier incorrect','danger')
             #return redirect(url_for('home_blueprint.upload_file'))
-            return render_template('home/import.html')
+            return render_template('home/import.html',doc_type=doc_type)
 
 @blueprint.route('/saved_file', methods=['GET', 'POST'])
 def saved_file():
+    doc_type = getAllDocType()
     if request.method == 'POST':
         file = request.values['filename']
         sep = request.values['sep']
@@ -98,10 +127,10 @@ def saved_file():
             # thread_a = Compute(doc_type,file,sep,colonnes,header,cols)
             # thread_a.start()
             flash('file loqd successfull','success')
-            return render_template('home/import.html',segment='imports',)
+            return render_template('home/import.html',segment='imports',doc_type=doc_type)
         except:
             flash('Erreur, file error','danger')
-            return render_template('home/import.html',segment='imports',)
+            return render_template('home/import.html',segment='imports',doc_type=doc_type)
 
     return request.values
 # def background(doc_type,file,sep,colonnes,header,cols):

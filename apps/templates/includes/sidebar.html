@@ -36,6 +36,12 @@
                     <a href="{{ url_for('home_blueprint.statut') }}" class="nav-link "><span class="pcoded-micon"><i class="feather icon-home"></i></span><span
                             class="pcoded-mtext">Statut</span></a>
                 </li>
+
+                <li data-username="statut" 
+                    class="nav-item {% if 'merge' in segment %} active {% endif %}">
+                    <a href="{{ url_for('home_blueprint.merge') }}" class="nav-link "><span class="pcoded-micon"><i class="feather icon-home"></i></span><span
+                            class="pcoded-mtext">Jointure</span></a>
+                </li>
                
             
                             
