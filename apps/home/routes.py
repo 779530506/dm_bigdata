@@ -48,19 +48,18 @@ def merge():
     if request.method == 'POST':
         index=request.values['index']
         commonField=request.values['commonField']
-        index_join=index+"_jointure"
         startDate = datetime.now()
-        createOrUpdateDocType(index_join,"pending....")
+        createOrUpdateDocType(index,"pending....")
 
         try:
             mergeIndex(index,commonField)
         except Exception as e:
-            flash('Erreur jointure','danger')
+            flash('Erreur jointure %s' %str(e),'danger')
             return render_template('home/merge_index.html', segment='merge',doc_type=doc_type)
 
         endDate = datetime.now() - startDate
         tmin = round((endDate.total_seconds())/60,4)
-        createOrUpdateDocType(index_join,"terminé en %s minute"%tmin)
+        createOrUpdateDocType(index,"terminé en %s minute"%tmin)
         
         
         flash('Start jointure','success')

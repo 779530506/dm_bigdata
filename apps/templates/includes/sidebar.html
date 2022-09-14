@@ -16,11 +16,6 @@
                     <label>Navigation</label>
                 </li>
                 <li data-username="dashboard Default Ecommerce CRM Analytics Crypto Project" 
-                    class="nav-item {% if 'imports' in segment %} active {% endif %}">
-                    <a href="/imports" class="nav-link "><span class="pcoded-micon"><i class="feather icon-home"></i></span><span
-                            class="pcoded-mtext">Import</span></a>
-                </li>
-                <li data-username="dashboard Default Ecommerce CRM Analytics Crypto Project" 
                     class="nav-item {% if 'index' in segment %} active {% endif %}">
                     <a href="/" class="nav-link "><span class="pcoded-micon"><i class="feather icon-home"></i></span><span
                             class="pcoded-mtext">Search</span></a>
@@ -30,17 +25,22 @@
                     <a href="/search_by_colonne" class="nav-link "><span class="pcoded-micon"><i class="feather icon-home"></i></span><span
                             class="pcoded-mtext">Search By Colonne</span></a>
                 </li>
-                
-                <li data-username="statut" 
-                    class="nav-item {% if 'statut' in segment %} active {% endif %}">
-                    <a href="{{ url_for('home_blueprint.statut') }}" class="nav-link "><span class="pcoded-micon"><i class="feather icon-home"></i></span><span
-                            class="pcoded-mtext">Statut</span></a>
+                <li data-username="dashboard Default Ecommerce CRM Analytics Crypto Project" 
+                    class="nav-item {% if 'imports' in segment %} active {% endif %}">
+                    <a href="/imports" class="nav-link "><span class="pcoded-micon"><i class="feather icon-home"></i></span><span
+                            class="pcoded-mtext">Import</span></a>
                 </li>
+
 
                 <li data-username="statut" 
                     class="nav-item {% if 'merge' in segment %} active {% endif %}">
                     <a href="{{ url_for('home_blueprint.merge') }}" class="nav-link "><span class="pcoded-micon"><i class="feather icon-home"></i></span><span
                             class="pcoded-mtext">Jointure</span></a>
+                </li>
+                <li data-username="statut" 
+                class="nav-item {% if 'statut' in segment %} active {% endif %}">
+                <a href="{{ url_for('home_blueprint.statut') }}" class="nav-link "><span class="pcoded-micon"><i class="feather icon-home"></i></span><span
+                        class="pcoded-mtext">Statut</span></a>
                 </li>
                
             

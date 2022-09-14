@@ -66,6 +66,7 @@
                                                             <div class="col-md-6">
                                                                 <label for="exampleFormControlSelect1">Index</label>
                                                                 <select class="form-control" name="index_type" id="exampleFormControlSelect1">
+                                                                    <option>Other</option>
                                                                     {% for doc in doc_type %}
                                                                     <option value="{{doc.name}}">{{doc.name}}</option>
                                                                     {% endfor %}
