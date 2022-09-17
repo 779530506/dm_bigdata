@@ -111,7 +111,7 @@ def mergeIndex(index1,commonField):
     client = Elasticsearch("http://localhost:9200",timeout=30)
     index2 = "digital"
     # commonField="myId"
-    #index1 = "test1"
+    # index1 = "test1"
     try:
         response=helpers.bulk(client, get_merged_records(client,index1, index2,commonField),
                     index="digital",
