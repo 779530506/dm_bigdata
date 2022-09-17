@@ -1,19 +1,20 @@
 from elasticsearch import helpers
 from elasticsearch.client import Elasticsearch
 import logging
-
+from apps.home.thread import Compute
 log = logging.getLogger(__name__)
-def get_merged_records(es, in1, in2, commonField):
+def get_merged_records(es, index1, base_index, commonField):
     lastEntityId=""
     mergedDoc=None
     index_precedent=""
+    id_to_delete=[]
     mergeQuery={
        "query": {"match_all": { }},
        "sort": [{commonField: {"order": "asc"}}]
     }
     
     merged = 0
-    for doc in helpers.scan(es,index=in1+","+in2,query=mergeQuery,size=100,
+    for doc in helpers.scan(es,index=index1+","+base_index,query=mergeQuery,size=100,
                         scroll="1m",
                         preserve_order=True):
         docSrc=doc["_source"]
@@ -38,9 +39,10 @@ def get_merged_records(es, in1, in2, commonField):
                    
 
                 merged += 1
-                if doc.get("_index") ==in2:
+                if doc.get("_index") ==base_index:
                     id_doc = doc.get("_id")
-                    es.delete(in2, doc_type="_doc", id=id_doc)
+                    #es.delete(base_index, doc_type="_doc", id=id_doc)
+                    id_to_delete.append(doc.get("_id"))
                 
                 
             else:
@@ -50,9 +52,10 @@ def get_merged_records(es, in1, in2, commonField):
                         yield {
                             "_source":mergedDoc
                         }
-                        if index_precedent ==in2:
-                            es.delete(in2, doc_type="_doc", id=id_precedent)
-                    elif index_precedent!=in2:
+                        if index_precedent ==base_index:
+                            #es.delete(base_index, doc_type="_doc", id=id_precedent)
+                            id_to_delete.append(id_precedent)
+                    elif index_precedent!=base_index:
                         yield {
                             "_source":mergedDoc
                         }
@@ -65,9 +68,11 @@ def get_merged_records(es, in1, in2, commonField):
                 index_precedent =doc.get("_index")
                 id_precedent =doc.get("_id")
 
-    
-    if mergedDoc is not None and index_precedent!=in2 :
-        
+    #log.debug("iid to delete %s"%id_to_delete)
+    thread_a = Compute(id_to_delete,base_index,es)
+    thread_a.start()
+    if mergedDoc is not None and index_precedent!=base_index :
+        log.debug("%s"%index_precedent)
         yield {
             "_source":mergedDoc
         }
