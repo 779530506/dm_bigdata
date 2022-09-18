@@ -14,7 +14,7 @@ def get_merged_records(es, index1, base_index, commonField):
     }
     
     merged = 0
-    for doc in helpers.scan(es,index=index1+","+base_index,query=mergeQuery,size=100,
+    for doc in helpers.scan(es,index=index1+","+base_index,query=mergeQuery,size=10000,
                         scroll="1m",
                         preserve_order=True):
         docSrc=doc["_source"]

@@ -76,3 +76,11 @@ helpers.bulk(es, get_merged_records(es, args.in1, args.in2, args.commonField),
              # doc_type="_doc",
              chunk_size=args.writesPerBulk)
 
+# curl -X PUT localhost:9200/digital -d '{
+#     "settings": {
+#         "index": {
+#             "number_of_shards" : 6,
+#            "number_of_replicas" : 6,
+#         }
+#     }
+# }'

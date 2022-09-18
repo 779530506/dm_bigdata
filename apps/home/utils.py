@@ -5,13 +5,15 @@ from elasticsearch import Elasticsearch, helpers
 from apps.home.toDatabase import create_doc_type,get_doc_type,update_doc_type,getAll_doc_type
 from apps.home.merge_index import get_merged_records
 # Create the client instance
-
+import logging
 import csv
 import os
 
 from collections import defaultdict
 from datetime import datetime
 import pandas as pd, numpy as np, uuid
+
+log = logging.getLogger(__name__)
 
 ''''
 generator to push bulk data from a JSON
@@ -31,16 +33,31 @@ def bulk_json_data(json_list, _index):
 load data to elastic search
 '''
 def load_to_elastic(df,index):
-    client = Elasticsearch("http://localhost:9200",timeout=30)
+    client = Elasticsearch("http://localhost:9200",timeout=60)
     #df = pd.read_csv(filename,sep=",",encoding= 'unicode_escape')
     df = df.replace(np.nan, '', regex=True)
     df2=df.to_dict("record")
     #index="digital"
+    settings =  {
+	    "settings" : {
+	        "number_of_shards": 2,
+	        "number_of_replicas": 0
+	    },
+	    'mappings': {}
+    }
+    all_index = client.indices.get_alias().keys()
+    if index not in all_index:
+        try:
+            client.indices.create(index, body=settings)
+        except Exception as e:
+            log.error(str(e))
+
+         
     try:
         # make the bulk call, and get a response
         response = helpers.bulk(client, bulk_json_data(df2, index),chunk_size=100000)
         print ("\nbulk_json_data() RESPONSE:", response)
-
+        
         return response
     except Exception as e:
         print("\nERROR:", e)
@@ -75,12 +92,12 @@ def getAllDocType():
     return getAll_doc_type()
 
 def getData():
-    client = Elasticsearch("http://localhost:9200",timeout=30)
-    resp = client.search(index="digital",request_timeout=30, body={'size' : 6000, 'query':{"match_all": {}}})
+    client = Elasticsearch("http://localhost:9200",timeout=60)
+    resp = client.search(index="digital", body={'size' : 60, 'query':{"match_all": {}}})
     return resp
 def getDataSearch(colonnes,value):
-    client = Elasticsearch("http://localhost:9200",timeout=30)
-    resp = client.search(index="digital", body={'size' : 6000, 'query':{
+    client = Elasticsearch("http://localhost:9200",timeout=60)
+    resp = client.search(index="digital", body={'size' : 60, 'query':{
         "multi_match": {
         "query" : value,
         "fields": colonnes
@@ -101,14 +118,14 @@ def getSearchMultiple(req):
     for i in range(len(req)):
         query.append({"match": req[i]})
     print(query)
-    client = Elasticsearch("http://localhost:9200",timeout=30)
-    resp = client.search(index="digital", body={'size' : 6000, 'query':{
+    client = Elasticsearch("http://localhost:9200",timeout=60)
+    resp = client.search(index="digital", body={'size' : 60, 'query':{
         "bool":{"must":query}
         }})
     return resp
 
 def mergeIndex(index1,commonField):
-    client = Elasticsearch("http://localhost:9200",timeout=30)
+    client = Elasticsearch("http://localhost:9200",timeout=60)
     index2 = "digital"
     # commonField="myId"
     # index1 = "test1"
