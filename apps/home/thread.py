@@ -21,9 +21,10 @@ class Compute(Thread):
         for id in self.id_to_delete:
             try:
                 self.es.delete(self.base_index, doc_type="_doc", id=id)
-                log.info("delete success")
+                #log.info("delete success")
             except Exception as e:
-                log.error(str(e))
+                pass
+                #log.error(str(e))
          
 
 

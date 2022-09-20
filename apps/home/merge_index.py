@@ -56,6 +56,7 @@ def get_merged_records(es, index1, base_index, commonField):
                             #es.delete(base_index, doc_type="_doc", id=id_precedent)
                             id_to_delete.append(id_precedent)
                     elif index_precedent!=base_index:
+
                         yield {
                             "_source":mergedDoc
                         }
@@ -66,6 +67,7 @@ def get_merged_records(es, index1, base_index, commonField):
                 mergedDoc = docSrc
                 lastEntityId = thisEntityId
                 index_precedent =doc.get("_index")
+                mergedDoc["source"]=index_precedent
                 id_precedent =doc.get("_id")
 
     #log.debug("iid to delete %s"%id_to_delete)

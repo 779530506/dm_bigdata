@@ -43,7 +43,21 @@ def load_to_elastic(df,index):
 	        "number_of_shards": 2,
 	        "number_of_replicas": 0
 	    },
-	    'mappings': {}
+	    'mappings': {
+            "properties" : {
+                "UID" : {
+                    "type" : "long"
+                    },
+                "number" : {
+                    "type" : "long"
+                    },
+                "phone" : {
+                    "type" : "long"
+                    },
+                "id" : {
+                    "type" : "long"
+                    },
+        }}
     }
     all_index = client.indices.get_alias().keys()
     if index not in all_index:
@@ -123,7 +137,7 @@ def getSearchMultiple(req):
         query.append({"match": req[i]})
     print(query)
     client = Elasticsearch("http://localhost:9200",timeout=60)
-    resp = client.search(index="digital", body={'size' : 60, 'query':{
+    resp = client.search(index="digital", body={'size' : 6000, 'query':{
         "bool":{"must":query}
         }})
     # for result in  helpers.scan(client,query={"query": {"bool":{"must":query}}},index="digital",doc_type="_doc"):
