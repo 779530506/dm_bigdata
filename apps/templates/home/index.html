@@ -75,6 +75,8 @@
                             </form>
                         </div>
                         <div class="card-block table-border-style">
+                            <button class="btn btn-dark" onclick="tableToExcel()">Export</button>
+
                             <div class="table-responsive">
                                 {% if nbr > 0 %}
                                 <h5>Total result: {{ total }}</h5>

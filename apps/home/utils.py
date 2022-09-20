@@ -55,8 +55,12 @@ def load_to_elastic(df,index):
          
     try:
         # make the bulk call, and get a response
-        response = helpers.bulk(client, bulk_json_data(df2, index),chunk_size=100000)
+        response = helpers.bulk(client, bulk_json_data(df2, index),chunk_size=50000)
         print ("\nbulk_json_data() RESPONSE:", response)
+
+        #for success, info in helpers.parallel_bulk(client, bulk_json_data(df2, index),thread_count=8 ,chunk_size=10000):
+        #     if not success:
+        #         print("Insert failed: ", info)
         
         return response
     except Exception as e:
@@ -122,6 +126,8 @@ def getSearchMultiple(req):
     resp = client.search(index="digital", body={'size' : 60, 'query':{
         "bool":{"must":query}
         }})
+    # for result in  helpers.scan(client,query={"query": {"bool":{"must":query}}},index="digital",doc_type="_doc"):
+    #     yield result['_source']
     return resp
 
 def mergeIndex(index1,commonField):
