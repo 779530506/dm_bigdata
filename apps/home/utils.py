@@ -81,7 +81,7 @@ def load_to_elastic(df,index):
         print("\nERROR:", e)
 
 
-def process_csv(filename,sep,head,setHeader,columns):
+def process_csv(filename,sep,head,setHeader,columns,colsHidden):
     index=(filename.split("/")[-1]).split("_")[0] # recuperer le type
     df = pd.read_csv(filename,sep=sep,encoding= 'unicode_escape')
 
@@ -89,9 +89,14 @@ def process_csv(filename,sep,head,setHeader,columns):
     header,colonne=[],[]
     for i in range(len(head)):
         if (head[i]!="delete"):
-            header.append(head[i])
-            colonne.append(columns[i])
-
+            if (head[i]=="new"):
+                header.append(columns[i])
+                colonne.append(colsHidden[i])
+            else:
+                header.append(head[i])
+                colonne.append(colsHidden[i])
+    log.debug("colonne %s"% colonne)
+    log.debug("header %s"% header)
     if setHeader=="oui":
         df = df[colonne]
         df.columns = header
@@ -112,7 +117,14 @@ def getAllDocType():
 def getData():
     client = Elasticsearch("http://localhost:9200",timeout=60)
     resp = client.search(index="digital", body={'size' : 60, 'query':{"match_all": {}}})
-    return resp
+    colonne=[]
+    dict_keys = [item["_source"].keys() for item in resp["hits"]["hits"]]
+    for list_keys in dict_keys:
+        #for key in list_keys:
+            #log.debug(key)
+        colonne = colonne | list_keys
+    log.debug(colonne)
+    return resp,list(colonne)
 def getDataSearch(colonnes,value):
     client = Elasticsearch("http://localhost:9200",timeout=60)
     resp = client.search(index="digital", body={'size' : 60, 'query':{

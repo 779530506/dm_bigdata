@@ -20,12 +20,13 @@ import threading
 def index():
     try:
         #mergeIndex("italia","italia1","number")
-        data = getData()
+        data,colonnes = getData()
         fields = getFields()
         personnes = data["hits"]["hits"]
-        total = data["hits"]["total"]
+        total = data["hits"]["total"]["value"]
         nbrPersonne = len(personnes)
-        return render_template('home/index.html', total=total,segment='index',fields=fields,personnes=personnes,nbr=nbrPersonne)
+        nbrColonne = len(colonnes)
+        return render_template('home/index.html', total=total,segment='index',nbrColonne=nbrColonne,fields=fields,colonnes=colonnes,personnes=personnes,nbr=nbrPersonne)
     except Exception as e:
         return str(e)
 
@@ -113,13 +114,14 @@ def saved_file():
         header = request.values['header']
         colonnes= request.values["hidden_colonnes"].split(",")
         cols= request.form.getlist('mytext[]')
+        colsHidden= request.form.getlist('colsHidden[]')
         doc_type=(file.split("/")[-1]).split("_")[0]
         #if(header=="oui"):
         try:
             
             startDate = datetime.now()
             createOrUpdateDocType(doc_type,"pending....")
-            process_csv(file,sep,colonnes,header,cols)
+            process_csv(file,sep,colonnes,header,cols,colsHidden)
             endDate = datetime.now() - startDate
             tmin = round((endDate.total_seconds())/60,4)
             createOrUpdateDocType(doc_type,"terminé en %s minute"%tmin)
@@ -148,7 +150,7 @@ def search():
         
         fields = getFields()
         data = getDataSearch(colonnes,value)
-        total = data["hits"]["total"]
+        total = data["hits"]["total"]["value"]
         personnes = data["hits"]["hits"]
         nbrPersonne = len(personnes)
         return render_template('home/index.html',total=total, segment='index',fields=fields,personnes=personnes,nbr=nbrPersonne)
@@ -178,7 +180,7 @@ def searchmultiple():
         tab.append({b[i]:v[i]})
     data = getSearchMultiple(tab)
     personnes = data["hits"]["hits"]
-    total = data["hits"]["total"]
+    total = data["hits"]["total"]["value"]
     nbrPersonne = len(personnes)
 
     return render_template('home/search.html', segment='searchmultiple',total=total,fields=fields,personnes=personnes,nbr=nbrPersonne)

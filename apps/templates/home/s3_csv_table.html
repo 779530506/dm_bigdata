@@ -55,7 +55,7 @@
                                                                         
                                 <div class="col-md-3"> 
                                     <select class="form-control" name="header" id="exampleFormControlSelect1">
-                                        <option>Add header</option>
+                                        <option>Change header</option>
                                         <option >oui</option>
                                         <option>non</option>
                                     </select>
@@ -65,15 +65,16 @@
                                 <input type="hidden" id="hidden_colonnes"   name="hidden_colonnes" > 
                              </div>
                              <div class="table-responsive">  
-                                <table class="table bg-red table-striped ">
+                                <table style="width:100%" class="table bg-red table-striped ">
                                     <thead class="table-dark"> 
                                         <tr>
                                             
                                             {% for i in range(nbrColonne)%}
-                                            <td>
+                                            <td  >
                                             <select name="colonnes" id="colonnes" class="form-control colonnes"  id="colonnes">
                                              {% if fields %}
                                              <option value="delete">Delete</option>
+                                             <option value="new">New</option>
                                                 {% for value in fields %}
                                                     <option value="{{value}}" checked> {{value}}</option>
                                                     {%endfor %}
@@ -94,10 +95,12 @@
                                         <tr>
                                             
                                             {% for value in colonnes %}
-                                            <td>              
-                                                <input value="{{value}}" type="text"
-                                                 name="mytext[]" class="form-control" readonly="true" >
-                                                   
+
+                                            <td >              
+                                                <input style="width: 150px" value="{{value}}" type="text" 
+                                                 name="mytext[]" class="form-control"  >
+                                                 <input style="display:none;" value="{{value}}" type="text" name="colsHidden[]" class="form-control"   type="hidden">                                                   
+
                                             </td>
                                             {%endfor %}
                                         </tr>

@@ -86,7 +86,7 @@
                                 <table class="table bg-red table-striped ">
                                     <thead class="table-dark"> 
                                         {% if nbr > 0 %}
-                                        <tr> {% for key in fields %}
+                                        <tr> {% for key in colonnes %}
                                             <th>{{key}} </th>
                                             {%endfor %}
 
@@ -97,8 +97,10 @@
                                         {% if nbr > 0 %}
                                         {% for key in personnes %}
                                         <tr> 
-                                            									
-                                            <td>{{key['_source']["UID"]}}</td>
+                                            {% for i in range(nbrColonne) %}
+                                             <td>{{key['_source'][fields[i]]}}</td>		
+                                             {% endfor%}							
+                                            <!-- <td>{{key['_source']["UID"]}}</td>
                                             <td>{{key['_source']["number"]}}</td>
                                             <td>{{key['_source']["first_name"]}}</td>
                                             <td>{{key['_source']["last_name"]}}</td>
@@ -110,7 +112,7 @@
                                             <td>{{key['_source']["company"]}}</td>
                                             <td>{{key['_source']["last_publication"]}}</td>
                                             <td>{{key['_source']["mail"]}}</td>
-                                            <td>{{key['_source']["date_of_birth"]}}</td>
+                                            <td>{{key['_source']["date_of_birth"]}}</td> -->
                                                        
                                         </tr>
                                         {% endfor%} 
