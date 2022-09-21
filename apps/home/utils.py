@@ -116,7 +116,7 @@ def getAllDocType():
 
 def getData():
     client = Elasticsearch("http://localhost:9200",timeout=60)
-    resp = client.search(index="digital", body={'size' : 60, 'query':{"match_all": {}}})
+    resp = client.search(index="digital", body={'size' : 6, 'query':{"match_all": {}}})
     colonne=[]
     dict_keys = [item["_source"].keys() for item in resp["hits"]["hits"]]
     for list_keys in dict_keys:
@@ -127,7 +127,7 @@ def getData():
     return resp,list(colonne)
 def getDataSearch(colonnes,value):
     client = Elasticsearch("http://localhost:9200",timeout=60)
-    resp = client.search(index="digital", body={'size' : 60, 'query':{
+    resp = client.search(index="digital", body={'size' : 6, 'query':{
         "multi_match": {
         "query" : value,
         "fields": colonnes
@@ -149,7 +149,7 @@ def getSearchMultiple(req):
         query.append({"match": req[i]})
     print(query)
     client = Elasticsearch("http://localhost:9200",timeout=60)
-    resp = client.search(index="digital", body={'size' : 6000, 'query':{
+    resp = client.search(index="digital", body={'size' : 5, 'query':{
         "bool":{"must":query}
         }})
     # for result in  helpers.scan(client,query={"query": {"bool":{"must":query}}},index="digital",doc_type="_doc"):
