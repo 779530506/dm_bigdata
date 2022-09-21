@@ -25,20 +25,3 @@ class DocTypes(db.Model):
         return str(self.name)
 
 
-class ColonnesSearch(db.Model):
-
-    __tablename__ = 'ColonnesSearch'
-
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(164))
-    
-    def __init__(self, name):
-        self.name = name
-
-
-
-    def __repr__(self):
-        return str(self.name)
-
-
-

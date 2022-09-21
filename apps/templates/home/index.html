@@ -98,7 +98,7 @@
                                         {% for key in personnes %}
                                         <tr> 
                                             {% for i in range(nbrColonne) %}
-                                             <td>{{key['_source'][colonnes[i]]}}</td>		
+                                             <td>{{key['_source'][fields[i]]}}</td>		
                                              {% endfor%}							
                                             <!-- <td>{{key['_source']["UID"]}}</td>
                                             <td>{{key['_source']["number"]}}</td>

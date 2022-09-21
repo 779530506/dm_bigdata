@@ -1,4 +1,4 @@
-from apps.home.models import ColonnesSearch, DocTypes
+from apps.home.models import DocTypes
 from apps import db
 
 def create_doc_type(name,statut):
@@ -22,7 +22,6 @@ def getAll_doc_type():
         return DocTypes.query.all()
     except:
         return []
-
 def update_doc_type(name,statut):
     doc = DocTypes.query.filter_by(name = name).first()
     doc.statut = statut
@@ -35,23 +34,3 @@ def deleteAll():
     for d in doc:
         db.session.delete(d)
         db.session.commit()
-
-### colonne search
-
-def createColonneSearch(name):
-    
-    colonne = ColonnesSearch(name)
-    db.session.add(colonne)
-    db.session.commit()
-
-def getColonneSearch(name):
-    try:  
-        return ColonnesSearch.query.filter(ColonnesSearch.name == name).first().name   
-    except:
-        return False
-def getAllColonneSearch(): 
-    try:
-        
-        return ColonnesSearch.query.all()
-    except:
-        return []
