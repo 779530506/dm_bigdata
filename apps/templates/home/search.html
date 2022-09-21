@@ -67,6 +67,33 @@
                                 <table class="table bg-red table-striped ">
                                     <thead class="table-dark"> 
                                         {% if nbr > 0 %}
+                                        <tr> {% for key in colonnes %}
+                                            <th>{{key}} </th>
+                                            {%endfor %}
+
+                                        </tr>
+                                        {% endif %}
+                                    </thead>
+                                    <tbody>
+                                        {% if nbr > 0 %}
+                                        {% for key in personnes %}
+                                        <tr> 
+                                            {% for i in range(nbrColonne) %}
+                                             <td>{{key['_source'][colonnes[i]]}}</td>		
+                                             {% endfor%}							
+                                         
+                                                       
+                                        </tr>
+                                        {% endfor%} 
+                                        {% else %}
+                                        <H4>Aucune Correspondance</H4>
+                                    {% endif %}
+                                        
+                                    </tbody>
+                                </table>
+                                <!-- <table class="table bg-red table-striped ">
+                                    <thead class="table-dark"> 
+                                        {% if nbr > 0 %}
                                         <tr> {% for key in fields %}
                                             <th>{{key}} </th>
                                             {%endfor %}
@@ -100,7 +127,8 @@
                                     {% endif %}
                                         
                                     </tbody>
-                                </table>
+                                </table> -->
+                            
                             </div>
                         </div>
                     </div>

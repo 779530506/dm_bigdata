@@ -43,6 +43,11 @@
                         class="pcoded-mtext">Statut</span></a>
                 </li>
                
+                <li data-username="statut" 
+                class="nav-item {% if 'colonne_search' in segment %} active {% endif %}">
+                <a href="{{ url_for('home_blueprint.create_colonne') }}" class="nav-link "><span class="pcoded-micon"><i class="feather icon-home"></i></span><span
+                        class="pcoded-mtext">Colonne Search</span></a>
+                </li>
             
                             
             </ul>

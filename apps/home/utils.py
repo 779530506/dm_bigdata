@@ -116,16 +116,14 @@ def getAllDocType():
 
 def getData():
     client = Elasticsearch("http://localhost:9200",timeout=60)
-    resp = client.search(index="digital", body={'size' : 60, 'query':{"match_all": {}}})
+    resp = client.search(index="digital", body={'size' : 5, 'query':{"match_all": {}}})
     colonne=[]
     dict_keys = [item["_source"].keys() for item in resp["hits"]["hits"]]
     for list_keys in dict_keys:
-        #for key in list_keys:
-            #log.debug(key)
         colonne = colonne | list_keys
-    log.debug(colonne)
     return resp,list(colonne)
 def getDataSearch(colonnes,value):
+    
     client = Elasticsearch("http://localhost:9200",timeout=60)
     resp = client.search(index="digital", body={'size' : 60, 'query':{
         "multi_match": {
@@ -133,7 +131,11 @@ def getDataSearch(colonnes,value):
         "fields": colonnes
        }
         }})
-    return resp
+    colonnes=[]
+    dict_keys = [item["_source"].keys() for item in resp["hits"]["hits"]]
+    for list_keys in dict_keys:
+        colonnes = colonnes | list_keys    
+    return resp,colonnes
 def getFields():
     # client = Elasticsearch("http://localhost:9200",)
     # resp = client.search(index="digital", body={'size' : 1, 'query':{"match_all": {}}})
@@ -154,7 +156,11 @@ def getSearchMultiple(req):
         }})
     # for result in  helpers.scan(client,query={"query": {"bool":{"must":query}}},index="digital",doc_type="_doc"):
     #     yield result['_source']
-    return resp
+    colonnes=[]
+    dict_keys = [item["_source"].keys() for item in resp["hits"]["hits"]]
+    for list_keys in dict_keys:
+        colonnes = colonnes | list_keys  
+    return resp,colonnes
 
 def mergeIndex(index1,commonField):
     client = Elasticsearch("http://localhost:9200",timeout=60)

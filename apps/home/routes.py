@@ -4,6 +4,7 @@ Copyright (c) 2019 - present AppSeed.us
 """
 
 from apps.home import blueprint
+from apps.home.toDatabase import createColonneSearch, getAllColonneSearch, getColonneSearch
 from flask import render_template, request,flash,redirect,url_for
 from flask_login import login_required
 from jinja2 import TemplateNotFound
@@ -13,15 +14,16 @@ from apps.home.utils import mergeIndex,createOrUpdateDocType,getAllDocType, getD
 from datetime import datetime
 import pandas as pd
 import threading
+import logging
 
-
+log = logging.getLogger(__name__)
 @blueprint.route('/index')
 @login_required
 def index():
     try:
         #mergeIndex("italia","italia1","number")
         data,colonnes = getData()
-        fields = getFields()
+        fields = getAllColonneSearch()
         personnes = data["hits"]["hits"]
         total = data["hits"]["total"]["value"]
         nbrPersonne = len(personnes)
@@ -70,7 +72,7 @@ def merge():
 
 @blueprint.route('/upload', methods=['GET', 'POST'])
 def upload_file():
-    fields = getFields()
+    fields = getAllColonneSearch()
     doc_type = getAllDocType()
     if request.method == 'POST':
         file = request.files['file']
@@ -148,18 +150,20 @@ def search():
         if request.values["value"]=='':
             return redirect(url_for('home_blueprint.index'))
         
+        #fields = getAllColonneSearch()
         fields = getFields()
-        data = getDataSearch(colonnes,value)
+        data,colonnes = getDataSearch(colonnes,value)
         total = data["hits"]["total"]["value"]
         personnes = data["hits"]["hits"]
         nbrPersonne = len(personnes)
-        return render_template('home/index.html',total=total, segment='index',fields=fields,personnes=personnes,nbr=nbrPersonne)
+        
+        return render_template('home/index.html',total=total, segment='index',colonnes=colonnes,fields=fields,personnes=personnes,nbr=nbrPersonne)
     except Exception as e:
-        return str(e)
+        return "error %s" % (str(e))
 
 @blueprint.route('/search_by_colonne')
 def searchByColonne():
-    fields = getFields()
+    fields = getAllColonneSearch()
     return render_template('home/search.html', segment='searchmultiple',nbr=0)
     # except Exception as e:
     #     return str(e)
@@ -169,7 +173,7 @@ def searchmultiple():
     #return request.values
     v= request.form.getlist('mytext[]')
     b= request.values["hidden_colonnes"].split(",")
-    fields = getFields()
+    fields = getAllColonneSearch()
     tab=[]
     for i in range(len(v)):
         if b[i]=="number" or b[i]=="UID" :
@@ -178,12 +182,12 @@ def searchmultiple():
             except:
                 return render_template('home/search.html', segment='searchmultiple',nbr=0)
         tab.append({b[i]:v[i]})
-    data = getSearchMultiple(tab)
+    data,colonnes = getSearchMultiple(tab)
     personnes = data["hits"]["hits"]
     total = data["hits"]["total"]["value"]
     nbrPersonne = len(personnes)
 
-    return render_template('home/search.html', segment='searchmultiple',total=total,fields=fields,personnes=personnes,nbr=nbrPersonne)
+    return render_template('home/search.html', segment='searchmultiple',colonnes=colonnes,total=total,fields=fields,personnes=personnes,nbr=nbrPersonne)
 
 @blueprint.route('/statut')
 def statut():
@@ -226,3 +230,23 @@ def get_segment(request):
 
     except:
         return None
+
+@blueprint.route('/create_colonne', methods=['GET', 'POST'])
+def create_colonne():
+    log.debug("all colonnes %s"% getAllColonneSearch())
+    if request.method == 'POST':
+        name = request.values['name']
+        if name== getColonneSearch(name):
+            flash("colonne existe déjà ","danger")
+            return redirect(url_for('home_blueprint.create_colonne'))
+        else:
+            try:
+                createColonneSearch(name)
+                flash("colonne créer avec succés ","success")
+                return redirect(url_for('home_blueprint.create_colonne'))
+            except Exception as e:
+                log.error("erreur création colonne %s" % str(e))
+                flash("Erreur interne","danger")
+                return redirect(url_for('home_blueprint.create_colonne'))
+    
+    return  render_template('home/create_colonne.html', segment='colonne_search')

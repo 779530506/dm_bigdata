@@ -1,0 +1,97 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} UI Forms {% endblock %} 
+
+<!-- Specific CSS goes HERE -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+
+    <!-- [ Main Content ] start -->
+    <div class="pcoded-main-container">
+        <div class="pcoded-wrapper">
+
+            <div class="pcoded-content">
+                <div class="pcoded-inner-content">
+                    <!-- [ breadcrumb ] start -->
+                    <div class="page-header">
+                        <div class="page-block">
+                            <div class="row align-items-center">
+                                <div class="col-md-12">
+                                    <div class="page-header-title">
+                                        <h5 class="m-b-10">Colonne create page </h5>
+                                    </div>
+                                    <ul class="breadcrumb">
+                                        <li class="breadcrumb-item"><a href="/"><i class="feather icon-home"></i></a></li>
+                                        <li class="breadcrumb-item"><a href="javascript:">Import Page</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- [ breadcrumb ] end -->
+                    <div class="main-body">
+                        <div class="page-wrapper">
+                            <!-- [ Main Content ] start -->
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <h5>Jointure</h5>
+                                        </div>
+                                        <div class="card-body">
+                                          <div class="alert-success">
+                                    
+                                            {% for category, message in get_flashed_messages(with_categories=True) %}
+                                            <div class="alert-{{category}}"> {{ message }}</div>
+                                            {% endfor %}
+                                          </div>
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    
+
+                                                    <form method="POST"  action="{{ url_for('home_blueprint.create_colonne') }}" enctype="multipart/form-data">
+                                                    
+                                                        <div class="form-group">
+                                                            <div class="row">
+                                                            <div class="col-md-6">
+                                                                <label for="exampleFormControlSelect1">Index</label>
+                                                                <input type="text" name="name" class="form-control">
+
+                                                            </div>
+                                                          
+                                                    
+                                                        </div>
+                                                    </div>
+                                                        <div class="row">
+                                                            <!-- <div class="col-md-6">  <button  class="btn btn-primary">preview</button> </div> -->
+                                                            <div class="col-md-4">  <button type="submit" class="btn btn-primary">Update</button> </div>
+                                                        </div>
+                                                       
+                                                        
+                                                    </form>
+                                                </div>
+                                                
+                                            </div>
+                                            <h5 class="mt-5">Sizing</h5>
+                                            <hr>
+                                            
+                                        </div>
+                                    </div>
+                            
+                                </div>
+                            </div>
+                            <!-- [ Main Content ] end -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+    <!-- [ Main Content ] end -->
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}{% endblock javascripts %}
