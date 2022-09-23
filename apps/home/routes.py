@@ -81,8 +81,8 @@ def upload_file():
 
         if file and allowed_file(file.filename):
         #return f'uploaded {f.filename}'
-            rep ="/home/abdoulayesarr/Documents/Digital_management/tmp"
-            #rep ="/home/data/Documents/dm/tmp"
+            #rep ="/home/abdoulayesarr/Documents/Digital_management/tmp"
+            rep ="/home/data/Documents/dm/tmp"
             new_filename = f'{index_type}_{file.filename.split(".")[0]}_{str(datetime.now())}.csv'
             file.save(os.path.join(rep,new_filename))
             #output = process_csv(os.path.join(rep,new_filename))
@@ -90,7 +90,7 @@ def upload_file():
             #with open(os.path.join(rep,new_filename)) as file:
             if(delimiter=="tab"):
                 delimiter="\t"
-            data = pd.read_csv(filename,header=0,sep=delimiter,encoding= 'unicode_escape') 
+            data = pd.read_csv(filename,header=0,sep=delimiter,error_bad_lines=False) 
             colonnes=[]
             
             myData = data.values[:5]

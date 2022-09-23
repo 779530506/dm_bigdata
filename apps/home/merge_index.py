@@ -27,6 +27,8 @@ def get_merged_records(es, index1, base_index, commonField):
                 keys = mergedDoc.keys() | docSrc.keys()
                 keys.remove(commonField)
                 for k in keys:
+                    # if k not in ["number","phone","id","UID"]: 
+
                     if (mergedDoc.get(k)!=None and docSrc.get(k) !=None) and (mergedDoc.get(k) != docSrc.get(k)):
                         if str(docSrc.get(k))  in str(mergedDoc.get(k)) :
                             mergedDoc[k]=mergedDoc.get(k)

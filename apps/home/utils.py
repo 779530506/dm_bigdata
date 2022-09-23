@@ -40,7 +40,7 @@ def load_to_elastic(df,index):
     #index="digital"
     settings =  {
 	    "settings" : {
-	        "number_of_shards": 2,
+	        "number_of_shards": 5,
 	        "number_of_replicas": 0
 	    },
 	    'mappings': {
@@ -83,7 +83,7 @@ def load_to_elastic(df,index):
 
 def process_csv(filename,sep,head,setHeader,columns,colsHidden):
     index=(filename.split("/")[-1]).split("_")[0] # recuperer le type
-    df = pd.read_csv(filename,sep=sep,encoding= 'unicode_escape')
+    df = pd.read_csv(filename,sep=sep,error_bad_lines=False)
 
     #delete colonne none
     header,colonne=[],[]
@@ -141,7 +141,7 @@ def getFields():
     # fields=[]
     # for key in personnes[0]['_source']:
     #     fields.append(key)
-    return  ["UID","number","first_name","last_name","gender","city_of_birth","city","status","company","last_publication","mail","date_of_birth"]
+    return  ["source","id","phone","UID","number","first_name","last_name","gender","city_of_birth","city","status","company","last_publication","mail","date_of_birth"]
 
 def getSearchMultiple(req):
     query = []
@@ -164,7 +164,7 @@ def mergeIndex(index1,commonField):
     try:
         response=helpers.bulk(client, get_merged_records(client,index1, index2,commonField),
                     index="digital",
-                    chunk_size=1000)
+                    chunk_size=10000)
         return response
     except  Exception as e:
         raise Exception('Error jointure %s'%str(e))

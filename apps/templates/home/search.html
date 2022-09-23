@@ -78,7 +78,9 @@
                                         {% if nbr > 0 %}
                                         {% for key in personnes %}
                                         <tr> 
-                                            									
+                                            <td>{{key['_source']["source"]}}</td>
+                                            <td>{{key['_source']["id"]}}</td>
+                                            <td>{{key['_source']["phone"]}}</td> 									
                                             <td>{{key['_source']["UID"]}}</td>
                                             <td>{{key['_source']["number"]}}</td>
                                             <td>{{key['_source']["first_name"]}}</td>
@@ -136,7 +138,7 @@
         e.preventDefault();
             if(x < max_fields){ //max input box allowed
                 x++; //text box increment
-                $(wrapper).append('<div class="input-group mb-3"> <select name="colonnes" class="form-control"  id="colonnes"><option value="UID">UID</option><option value="number">number</option><option value="first_name">first_name</option><option value="last_name">last_name</option><option value="gender">gender</option><option value="city_of_birth">city_of_birth</option><option value="city">city</option> <option value="status">status</option><option value="last_publication">last_publication</option><option value="mail">mail</option><option value="date_of_birth">date_of_birth</option></select><input  type="text" name="mytext[]" class="form-control" required><div class="input-group-append"><button class="btn btn-outline-danger remove_field" type="button">Remove</button></div></div>'); //add input box
+                $(wrapper).append('<div class="input-group mb-3"> <select name="colonnes" class="form-control"  id="colonnes"><option value="UID">UID</option><option value="source">source</option><option value="id">id</option><option value="phone">phone</option><option value="number">number</option><option value="first_name">first_name</option><option value="last_name">last_name</option><option value="gender">gender</option><option value="city_of_birth">city_of_birth</option><option value="city">city</option> <option value="status">status</option><option value="last_publication">last_publication</option><option value="mail">mail</option><option value="date_of_birth">date_of_birth</option></select><input  type="text" name="mytext[]" class="form-control" required><div class="input-group-append"><button class="btn btn-outline-danger remove_field" type="button">Remove</button></div></div>'); //add input box
               
                 
             }
